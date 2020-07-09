@@ -3,7 +3,8 @@ import axios from 'axios';
 import "components/Application.scss";
 import DayList from "components/DayList";
 import Appointment from "components/Appointment";
-import getAppointmentsForDay from "helpers/selectors"
+import {getAppointmentsForDay, getInterview, getInterviewersForDay} from "helpers/selectors"
+
 
 
 export default function Application(props) {
@@ -20,7 +21,7 @@ export default function Application(props) {
   const appointments = getAppointmentsForDay(state, state.day)
 
   const setDay = day => setState({ ...state, day });
-  // const setDays = days => setState(prev => ({ ...prev, days }));
+  
 
   useEffect(() => {
     Promise.all([
@@ -28,7 +29,7 @@ export default function Application(props) {
       Promise.resolve(axios.get("/api/appointments")),
       Promise.resolve(axios.get("/api/interviewers"))
     ]).then((all) => {
-      console.log(all);
+      // console.log(all);
       
       setState(prev => ({
         days: all[0].data,
@@ -54,11 +55,20 @@ export default function Application(props) {
         <img className="sidebar__lhl sidebar--centered" src="images/lhl.png" alt="Lighthouse Labs"/>
       </section>
       <section className="schedule">
-        {appointments.map((appointment, i) => 
-      <Appointment
-        key={appointment.id} {...appointment}   
-
-      />)}
+        {appointments.length > 0 && appointments.map((appointment) => {
+          const interview = getInterview(state, appointment.interview);
+          const interviewers = getInterviewersForDay(state, state.day);
+          
+          return (
+          <Appointment
+            key={appointment.id}
+            id={appointment.id}
+            time={appointment.time}
+            interview={interview}
+            interviewers={interviewers}   
+          />)
+        }
+      )}
       <Appointment key="last" time="5pm" />
       </section>
     </main>
