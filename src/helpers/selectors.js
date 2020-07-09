@@ -1,5 +1,5 @@
 
-export function getAppointmentsForDay(state, day) {
+export default function getAppointmentsForDay(state, day) {
   //empty array to push appointment results
   let dayArr = [];
     
