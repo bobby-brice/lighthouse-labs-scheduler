@@ -1,8 +1,7 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import axios from 'axios';
 
-
-
+export default function useApplicationData(props) {
   const [state, setState] = useState({
     day: "Monday",
     days: [],
@@ -10,21 +9,52 @@ import axios from 'axios';
     interviewers: {}
   });
 
-  const setDay = day => setState({ ...state, day });
+  const setDay = day => setState({
+    ...state,
+    day
+  });
+
+function getUpdatedDays(newAppointments) {
+  return state.days.map((day, id) => {
+    let availSpots = 0;
+
+    for (let key of state.days[id].appointments) {
+      if (newAppointments[key].interview === null) {
+        availSpots++
+      }
+    }
+
+    const newDay = {
+      ...day,
+      spots: availSpots
+    }
+    return newDay
+  })
+}
 
   function bookInterview(id, interview) {
-    return axios.put(`http://localhost:8001/api/appointments/${id}`, {interview})
-    .then(() => {
-      const appointment = {
-        ...state.appointments[id],
-        interview: { ...interview }
-      };
-      const appointments = {
-        ...state.appointments,
-        [id]: appointment
-      };
-      setState({...state, appointments})
-    })
+    return axios.put(`http://localhost:8001/api/appointments/${id}`, {
+        interview
+      })
+      .then(() => {
+        const appointment = {
+          ...state.appointments[id],
+          interview: {
+            ...interview
+          }
+        };
+        const appointments = {
+          ...state.appointments,
+          [id]: appointment
+        };
+        const updateDays = getUpdatedDays(appointments)
+
+        setState({
+          ...state,
+          appointments,
+          days: updateDays
+        })
+      })
   }
 
   function cancelInterview(id) {
@@ -37,11 +67,17 @@ import axios from 'axios';
       ...state.appointments,
       [id]: appointment
     };
+    const updatedDays = getUpdatedDays(appointments)
     
+
     return axios.delete(`http://localhost:8001/api/appointments/${id}`)
-    .then(() => {
-      setState({...state, appointments})  
-    })
+      .then(() => {
+        setState({
+          ...state,
+          appointments,
+          days: updatedDays
+        })
+      })
   }
 
   useEffect(() => {
@@ -59,3 +95,8 @@ import axios from 'axios';
       }));
     }).catch(error => console.log(error))
   }, [])
+
+  return {state, setDay, bookInterview, cancelInterview}
+}
+
+  
