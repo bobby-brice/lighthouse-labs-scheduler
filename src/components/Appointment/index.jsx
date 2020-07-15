@@ -49,13 +49,13 @@ export default function Appointment(props) {
     return (
       <>
       <Header time={props.time}/>
-      <article className="appointment">
+      <article className="appointment" data-testid="appointment">
       {mode === EMPTY && <Empty onAdd={() => transition(CREATE)} />}
-      {mode === CREATE && <Form 
+      {mode === CREATE && (
+        <Form 
       interviewers={props.interviewers}
       onSave={save} onCancel={() => back()}  
-      />}
-      {mode === SAVING && <Status message={'Saving'}/>}
+      />)}
       {mode === SHOW && (
       <Show 
         student={props.interview.student}
@@ -64,27 +64,31 @@ export default function Appointment(props) {
         onEdit={() => transition(EDIT)}
         />
       )}
-      {mode === EDIT && <Form
+      {mode === EDIT && (
+        <Form
         name={props.interview.student} 
         interviewers={props.interviewers} 
         interviewer={props.interview.interviewer.id}
         onSave={save} onCancel={() => back()}
-      />}
+      />)}
       
-      {mode === CONFIRM && <Confirm 
+      {mode === CONFIRM && (<Confirm 
         message={'Are you sure you want to cancel?'}
         onCancel={() => back()}
         onConfirm={deleteInterview}  
-      />}
+      />)}
+      {mode === SAVING && <Status message={'Saving'}/>}
       {mode === DELETING && <Status 
         message="Deleting"
       />}
-      {mode === ERROR_SAVE && <Error message="oops and error occurred while saving"
+      {mode === ERROR_SAVE && (
+        <Error message="oops an error occurred while saving"
         onClose={back}
-      />}
-      {mode === ERROR_DELETE && <Error message="oops and error occurred while deleting"
+      />)}
+      {mode === ERROR_DELETE && (
+        <Error message="oops an error occurred while deleting"
         onClose={back}
-      />}
+      />)}
       
       </article>
       </>
