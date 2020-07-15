@@ -13,15 +13,15 @@ import "components/Appointment/styles.scss";
 
 export default function Appointment(props) {
 
-  const EMPTY = "EMPTY";
-  const SHOW = "SHOW";
-  const CREATE = "CREATE";
-  const SAVING = "SAVING"
-  const CONFIRM = 'CONFIRM'
-  const DELETING = 'DELETING'
-  const EDIT = 'EDIT'
-  const ERROR_SAVE = 'ERROR'
-  const ERROR_DELETE = "ERROR"
+  const EMPTY = 'EMPTY';
+  const SHOW = 'SHOW';
+  const CREATE = 'CREATE';
+  const SAVING = 'SAVING';
+  const CONFIRM = 'CONFIRM';
+  const DELETING = 'DELETING';
+  const EDIT = 'EDIT';
+  const ERROR_SAVE = 'ERROR_SAVE';
+  const ERROR_DELETE = "ERROR_DELETE";
     
   const { mode, transition, back } = useVisualMode(
     props.interview ? SHOW : EMPTY
