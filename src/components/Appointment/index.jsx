@@ -12,7 +12,7 @@ import Error from "components/Appointment/Error";
 import "components/Appointment/styles.scss";
 
 export default function Appointment(props) {
-
+  //mode 
   const EMPTY = 'EMPTY';
   const SHOW = 'SHOW';
   const CREATE = 'CREATE';
@@ -26,7 +26,7 @@ export default function Appointment(props) {
   const { mode, transition, back } = useVisualMode(
     props.interview ? SHOW : EMPTY
   );
-
+    //saves an interview and handles transition
     function save(name, interviewer) {
       const interview = {
         student: name,
@@ -37,7 +37,7 @@ export default function Appointment(props) {
       .then(() => transition(SHOW))
       .catch((error) => transition(ERROR_SAVE, true));  
     }
-
+    //deletes an interview and handles transition
     function deleteInterview() {
       transition(DELETING)
       props.cancelInterview(props.id)
